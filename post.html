@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" ng-app="blog">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-    <script type="text/javascript" src="app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+    <script src="app.js"></script>
     <title>Blog de NodeJS</title>
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,58 +17,70 @@
     <link rel="icon" href="https://getbootstrap.com/docs/5.2/assets/img/favicons/favicon.ico">
     <link href="https://getbootstrap.com/docs/4.6/examples/album/album.css" rel="stylesheet">
     <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-      }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
     </style>
-
-  </head>
+</head>
 <body ng-controller="DetailsController">
-
     <header>
-  <div class="navbar navbar-dark bg-dark shadow-sm">
-    <div class="container d-flex justify-content-between">
-      <a href="#" class="navbar-brand d-flex align-items-center">
-        <strong> Blog em NodeJS</strong>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </div>
-  </header>
-
-
-
-        <!-- Conteudo  -->
-        <div class="col d-flex flex-column h-sm-100">
-            <main class="row overflow-auto" ng-controller="RestController">
-
-              <img ng-src="{{ publicacao.thumbImage }}" class="bd-placeholder-img card-img-top">
-                <div class="col pt-4">
-                  <h5 class="card-title">{{ publicacao.title }}</h5>
-                  <p class="card-text">{{ publicacao.description }}</p>
-                </div>
-            </main>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <strong>Blog em NodeJS</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
         </div>
+    </header>
 
-        <footer class="text-muted">
-  <div class="container">
-    <p>@b_rochadel</p>
-  </div>
-</footer>
-    <script src="https://getbootstrap.com/docs/5.2/dist/js/bootstrap.bundle.min.js" ></script>
-      </body>
+    <!-- Conteudo -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <h1 class="display-4">{{ publicacao.title }}</h1>
+                <p class="lead">{{ publicacao.description }}</p>
+                <hr class="my-4">
+                <p>{{ publicacao.content }}</p>
+            </div>
+        </div>
+    </div>
 
+    <footer class="text-muted mt-5">
+        <div class="container">
+            <p>Usei o modelo do Bootstrap</p>
+        </div>
+    </footer>
+
+    <script src="https://getbootstrap.com/docs/5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        angular.module('blog', [])
+            .controller('DetailsController', function ($scope, $http) {
+                var urlParams = new URLSearchParams(window.location.search);
+                var id = urlParams.get('id');
+
+                if (id) {
+                    $http.get('https://api-fake-blog.onrender.com/postagem/' + id)
+                        .then(function (response) {
+                            $scope.publicacao = response.data;
+                        });
+                } else {
+                    console.error('ID não encontrado na URL');
+                }
+            });
+    </script>
+</body>
 </html>
